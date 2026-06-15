@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Integration Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+        #output {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MongoDB Integration Demo</h1>
+
+    <input type="text" id="name" placeholder="Enter Name">
+    <button onclick="saveData()">Save Data</button>
+    <button onclick="getData()">Get Data</button>
+
+    <div id="output"></div>
+
+    <script>
+        function saveData() {
+            const name = document.getElementById("name").value;
+
+            fetch("http://localhost:3000/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name: name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("output").innerHTML =
+                    "Data Saved Successfully!<br>" +
+                    JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("output").innerHTML =
+                    "MongoDB Connection Failed!";
+                console.error(error);
+            });
+        }
+
+        function getData() {
+            fetch("http://localhost:3000/users")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("output").innerHTML =
+                    JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("output").innerHTML =
+                    "Unable to Fetch Data!";
+                console.error(error);
+            });
+        }
+    </script>
+
+</body>
+</html>
